@@ -74,6 +74,13 @@
     # Voleibol Playa
     # Waterpolo
 
+class Participant:
+    
+    def __init__(self, name, country):
+        self.name = name
+        self.country = country
+
+
 class Olympics:
     
     def __init__(self):
@@ -81,7 +88,7 @@ class Olympics:
     
     def register_event(self):
         #Capturar el nombre del evento deportivo
-        event = " ".join(input("Introduce el evento deportivo: ").split()).strip()
+        event = " ".join(input("Introduce el evento deportivo: ").split()).strip().lower().title()
         
         #Verificar si el evento ya ha sido registrado
         if event in self.eventos:
@@ -115,6 +122,12 @@ class Olympics:
         else:
             print("No hay eventos registrados.")
         print()
+        
+    def register_participant(self):
+        name = " ".join(input("Introduce el NOMBRE del participante: ").split()).strip().lower().title()
+        country = " ".join(input("Introduce el PAÍS del participante: ").split()).strip().lower().title()
+        participant = Participant(name, country)
+        print(f"Participante registrado: { participant.name } de { participant.country }")
 
 olympics_2026 = Olympics()
 
@@ -139,7 +152,7 @@ while True:
         case "1":
             olympics_2026.register_event()
         case "2":
-            pass
+            olympics_2026.register_participant()
         case "3":
             pass
         case "4":
