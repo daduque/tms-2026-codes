@@ -20,8 +20,6 @@
 #  * 5. Salir del programa.
 #  */
 
-
-
     # Atletismo
     # Bádminton
     # Baloncesto
@@ -79,19 +77,25 @@ class Participant:
     def __init__(self, name, country):
         self.name = name
         self.country = country
+        
+    def __eq__(self, value):
+        if isinstance(value, Participant):
+            return self.name == value.name and self.country == value.country
+        return False
 
 
 class Olympics:
     
     def __init__(self):
-        self.eventos = []
+        self.events = []
+        self.participants = {}
     
     def register_event(self):
         #Capturar el nombre del evento deportivo
         event = " ".join(input("Introduce el evento deportivo: ").split()).strip().lower().title()
         
         #Verificar si el evento ya ha sido registrado
-        if event in self.eventos:
+        if event in self.events:
             print(f"El evento { event } no puede registrarse dos veces.")
             return
 
@@ -110,28 +114,69 @@ class Olympics:
             print("El nombre del evento no puede iniciar con un número.")
             return
         
-        self.eventos.append(event)
+        self.events.append(event)
         self.list_events()
     
     def list_events(self):
-        if self.eventos:
+        if self.events:
             print()
             print("Eventos registrados:")
-            for index,evento in enumerate(self.eventos, 1):
-                print(f"{ index } - { evento }")
+            for index,evento in enumerate(self.events, 1):
+                print(f"{ index }. { evento }")
         else:
             print("No hay eventos registrados.")
         print()
         
     def register_participant(self):
+        print()
+        
+        if not self.events:
+            print("No se pueden registrar participantes sin eventos registrados.")
+            return
+        
+        
         name = " ".join(input("Introduce el NOMBRE del participante: ").split()).strip().lower().title()
         country = " ".join(input("Introduce el PAÍS del participante: ").split()).strip().lower().title()
         participant = Participant(name, country)
-        print(f"Participante registrado: { participant.name } de { participant.country }")
+        print()
+        print(f"Registrando al participante: { participant.name } de { participant.country }")
 
+        self.list_events()
+        
+        event_choice = int(input("Seleccione el evento al que se inscribirá el participante: "))-1
+        
+        if event_choice < 0 or event_choice >= len(self.events):
+            print("El número del evento no es válido.")
+            return
+        
+        event = self.events[event_choice]
+        
+        try:
+            if participant not in self.participants[event]:
+                self.participants[event].append(participant)
+                print(f"El participante { participant.name } del país { participant.country } se ha registrado en el evento { event }.")
+            else:
+                print(f"El participante { participant.name } del país { participant.country } ya está registrado en el evento { event }.")
+        except KeyError:
+            self.participants[event].append(participant)
+            print(f"El participante { participant.name } del país { participant.country } se ha registrado en el evento { event }.")
+          
+            
 olympics_2026 = Olympics()
 
+
+def prueba_metodos():
+    participantes = {}
+    eventos = ["tenis de mesa", "natación", "atletismo"]
+    indice = 0
+    try:
+        print(f"{ participantes[eventos[indice]] }")
+    except:
+        participantes[eventos[indice]] = eventos[indice]
+        print(f"{ participantes[eventos[indice]] }")    
+
 while True:
+    print()
     print("*-" * 20)
     print("1. Registro de eventos")
     print("*" * 30)
@@ -142,6 +187,8 @@ while True:
     print("4. Creación de informes")
     print("*" * 30)
     print("5. Salir del programa")
+    print("*-" * 20)
+    print("6. Probar algo")
     print("*-" * 20)
     print()
 
@@ -160,6 +207,8 @@ while True:
         case "5":
             print("¡Gracias por participar en los JJOO de la UTP 2026!")
             break
+        case "6":
+            prueba_metodos()
         case _:
             print(f"La opción { option } no es válida. Por favor, selecciona una opción del 1 al 5.")
             print()
